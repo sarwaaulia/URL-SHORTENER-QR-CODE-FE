@@ -357,7 +357,7 @@ export default function LinkPage() {
 											</button>
 
 											<a
-												href={`${domain}/${link.short_code}`}
+												href={`${domain}/r/${link.short_code}`}
 												target="_blank"
 												onClick={(e) => e.stopPropagation()}
 												className="p-2 bg-[#6C5CE7] text-white rounded-lg hover:bg-[#5b4cc4] transition-all"

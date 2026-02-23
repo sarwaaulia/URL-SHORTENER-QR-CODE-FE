@@ -357,7 +357,7 @@ export default function QRPage() {
 												<Trash2 size={20} />
 											</button>
 											<a
-												href={`${domain}/${link.short_code}`}
+												href={`${domain}/r/${link.short_code}`}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="p-2.5 bg-[#6C5CE7] text-white rounded-xl hover:bg-[#5b4cc4] shadow-sm"
