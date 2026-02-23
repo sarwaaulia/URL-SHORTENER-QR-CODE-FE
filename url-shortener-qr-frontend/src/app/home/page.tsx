@@ -53,18 +53,18 @@ export default function HomePage() {
 	const router = useRouter();
 
 	useEffect(() => {
-        const token = localStorage.getItem("token");
-        const savedUser = localStorage.getItem("user_info");
+		const token = localStorage.getItem("token");
+		const savedUser = localStorage.getItem("user_info");
 
-        if (!token) {
-            router.replace("/login");
-        } else {
-            if (savedUser) {
-                setUserData(JSON.parse(savedUser));
-            }
-            setIsLoadingAuth(false);
-        }
-    }, [router]);
+		if (!token) {
+			router.replace("/login");
+		} else {
+			if (savedUser) {
+				setUserData(JSON.parse(savedUser));
+			}
+			setIsLoadingAuth(false);
+		}
+	}, [router]);
 
 	if (isLoadingAuth) return <p>Loading...</p>;
 
@@ -75,18 +75,21 @@ export default function HomePage() {
 		const token = localStorage.getItem("token");
 
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/links`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/api/links`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify({
+						originalUrl: originalURL,
+						customAlias: customAlias,
+						generateQr: generateQR,
+					}),
 				},
-				body: JSON.stringify({
-					originalUrl: originalURL,
-					customAlias: customAlias,
-					generateQr: generateQR,
-				}),
-			});
+			);
 
 			const result = await response.json();
 
@@ -112,7 +115,7 @@ export default function HomePage() {
 	return (
 		<div className="flex min-h-screen bg-slate-50 font-sans text-slate-900">
 			<aside
-				className={`hidden lg:flex flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out ${showNavigation ? "w-64" : "w-20"}`}
+				className={`hidden lg:flex flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out z-30${showNavigation ? "w-64" : "w-20"}`}
 			>
 				<div className="p-6 flex items-center justify-between">
 					{showNavigation && (
@@ -166,18 +169,17 @@ export default function HomePage() {
 			</aside>
 
 			{/* main section */}
-			<main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-
+			<main className="flex-1 flex flex-col min-w-0 h-full relative overflow-y-auto">
 				{/* navbar */}
-				<header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8">
+				<header className="sticky top-0 z-20 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 md:px-8">
 					<div className="flex items-center gap-4">
 						<button
 							onClick={() => setMobileMenuOpen(true)}
-							className="lg:hidden p-2 hover:bg-slate-100 rounded-lg"
+							className="lg:hidden p-2 hover:bg-slate-100 rounded-lg text-slate-600"
 						>
 							<Menu size={24} />
 						</button>
-						<div className="relative w-48 md:w-96 hidden sm:block">
+						<div className="relative w-40 md:w-80 hidden sm:block">
 							<Search
 								className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
 								size={18}
@@ -185,7 +187,7 @@ export default function HomePage() {
 							<input
 								type="text"
 								placeholder="Search links..."
-								className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#6C5CE7]/20"
+								className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#6C5CE7]/20 transition-all"
 							/>
 						</div>
 					</div>
@@ -194,29 +196,29 @@ export default function HomePage() {
 					<div className="relative">
 						<button
 							onClick={() => setShowProfile(!showProfile)}
-							className="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition border border-transparent hover:border-slate-200"
+							className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 transition border border-transparent"
 						>
-							<div className="w-8 h-8 rounded-full bg-[#6C5CE7] flex items-center justify-center text-white font-bold text-xs">
+							<div className="w-8 h-8 rounded-full bg-[#6C5CE7] flex items-center justify-center text-white font-bold text-xs shadow-sm">
 								{userData?.name?.charAt(0).toUpperCase() || "U"}
 							</div>
-							<span className="text-sm font-semibold text-slate-700 hidden md:block">
+							<span className="text-sm font-semibold text-slate-700 hidden md:block max-w-[150px] truncate">
 								{userData?.email || "user@gmail.com"}
 							</span>
 						</button>
 
 						{showProfile && (
-							<div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl py-3 z-50">
-								<div className="px-5 py-3 border-b border-slate-100 mb-2">
-									<p className="text-sm font-bold text-slate-900 truncate">
+							<div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+								<div className="px-4 py-2 border-b border-slate-100 mb-1">
+									<p className="text-xs text-slate-400 uppercase font-bold tracking-wider">
 										{userData?.name || "Loading..."}
 									</p>
-									<p className="text-xs text-slate-500 truncate">
+									<p className="text-sm font-bold text-slate-900 truncate">
 										{userData?.email || "email@example.com"}
 									</p>
 								</div>
 								<button
 									onClick={handleLogOut}
-									className="w-full text-left px-5 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
+									className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
 								>
 									<LogOut size={16} /> Sign Out
 								</button>
@@ -226,10 +228,10 @@ export default function HomePage() {
 				</header>
 
 				{/* content quick create */}
-				<div className="p-4 md:p-8 overflow-y-auto">
-					<div className="max-w-5xl mx-auto">
+				<div className="p-4 md:p-8 lg:p-12">
+					<div className="max-w-4xl mx-auto">
 						<header className="mb-8">
-							<h2 className="text-2xl md:text-3xl font-black text-slate-800">
+							<h2 className="text-2xl md:text-4xl font-black text-slate-800 tracking-tight">
 								Hello, {userData?.name?.split(" ")[0] || "User"}!
 							</h2>
 							<p className="text-slate-500">
@@ -237,23 +239,22 @@ export default function HomePage() {
 							</p>
 						</header>
 
-						<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
+						<div className="flex flex-col lg:flex-row gap-6 items-start">
 							{/* form card */}
 							<form
 								onSubmit={handleCreateLink}
-								className={`${shortedLink ? "lg:col-span-7" : "lg:col-span-12"} bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 transition-all`}
+								className={`w-full ${shortedLink ? "lg:w-[60%]" : "lg:w-full"} bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 transition-all`}
 							>
-								<div className="flex items-center gap-3 mb-8">
-									<div className="p-2.5 bg-[#6C5CE7]/10 rounded-xl text-[#6C5CE7]">
+								<div className="flex items-center gap-3 mb-6">
+									<div className="p-2 bg-[#6C5CE7]/10 rounded-xl text-[#6C5CE7]">
 										<Plus size={22} />
 									</div>
-									<h3 className="text-xl font-bold">Quick Create</h3>
+									<h3 className="text-xl">Quick Create</h3>
 								</div>
 
-								<div className="space-y-6">
-									<div className="space-y-2">
-										<label className="text-sm font-bold text-slate-700">
+								<div className="space-y-5">
+									<div className="space-y-1.5">
+										<label className="text-xs font-bold text-slate-500 uppercase ml-1">
 											Destination URL
 										</label>
 										<input
@@ -262,12 +263,12 @@ export default function HomePage() {
 											value={originalURL}
 											onChange={(e) => setOriginalURL(e.target.value)}
 											placeholder="https://very-long-link.com/your-destination"
-											className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#6C5CE7] outline-none transition"
+											className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#6C5CE7] outline-none transition-all"
 										/>
 									</div>
 
-									<div className="space-y-2">
-										<label className="text-sm font-bold text-slate-700">
+									<div className="space-y-1.5">
+										<label className="text-xs font-bold text-slate-500 uppercase ml-1">
 											Custom Alias (Optional)
 										</label>
 										<input
@@ -277,18 +278,18 @@ export default function HomePage() {
 												setCustomAlias(e.target.value.replace(/\s/g, ""))
 											}
 											placeholder="e.g: my-promo"
-											className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#6C5CE7] outline-none transition"
+											className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#6C5CE7] outline-none transition-all"
 										/>
 									</div>
 
-									<label className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300 cursor-pointer hover:bg-slate-100 transition">
+									<label className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300 cursor-pointer hover:border-[#6C5CE7] transition-all group">
 										<input
 											type="checkbox"
 											checked={generateQR}
 											onChange={(e) => setGenerateQR(e.target.checked)}
 											className="w-5 h-5 accent-[#6C5CE7] rounded"
 										/>
-										<span className="text-sm font-medium text-slate-600">
+										<span className="text-sm font-medium text-slate-600 group-hover:text-[#6C5CE7]">
 											Generate QR Code for this link
 										</span>
 									</label>
@@ -296,7 +297,7 @@ export default function HomePage() {
 									<button
 										type="submit"
 										disabled={loading}
-										className="w-full bg-[#6C5CE7] hover:bg-[#5b4cc4] disabled:bg-slate-300 text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#6C5CE7]/30 transition active:scale-95"
+										className="w-full bg-[#6C5CE7] hover:bg-[#5b4cc4] disabled:bg-slate-300 text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#6C5CE7]/20 transition-all active:scale-[0.98]"
 									>
 										{loading ? "Creating..." : "Generate Link"}
 									</button>
@@ -305,13 +306,13 @@ export default function HomePage() {
 
 							{/* output from generate */}
 							{shortedLink && (
-								<div className="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl border-2 border-[#6C5CE7] shadow-xl shadow-[#6C5CE7]/10 flex flex-col items-center animate-in fade-in slide-in-from-right-4 duration-500">
+								<div className="w-full lg:w-[40%] bg-white p-6 md:p-8 rounded-3xl border-2 border-[#6C5CE7] shadow-xl shadow-[#6C5CE7]/10 flex flex-col items-center animate-in slide-in-from-bottom-5 lg:slide-in-from-right-5 duration-500">
 									<div className="bg-[#6C5CE7] text-white text-[10px] uppercase tracking-widest font-black px-3 py-1 rounded-full mb-6">
 										Link ready!
 									</div>
 
 									{generateQR && (
-										<div className="mb-6 p-4 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+										<div className="mb-6 p-3 bg-white rounded-2xl border border-slate-100 shadow-sm">
 											<img
 												src={`https://quickchart.io/qr?size=200x200&text=${domain}/${shortedLink.short_code}`}
 												alt="QR Code"
@@ -320,16 +321,16 @@ export default function HomePage() {
 										</div>
 									)}
 
-									<div className="w-full bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-8 group relative overflow-hidden">
-										<p className="text-xs font-bold text-slate-400 uppercase mb-1">
+									<div className="w-full bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6 text-center">
+										<p className="text-[10px] font-bold text-slate-400 uppercase mb-1">
 											Your short link
 										</p>
-										<p className="text-lg font-bold text-[#6C5CE7] break-all font-mono">
+										<p className="text-md font-bold text-[#6C5CE7] break-all font-mono">
 											{`${domain.replace("http://", "")}/${shortedLink.short_code}`}
 										</p>
 									</div>
 
-									<div className="grid grid-cols-1 w-full gap-3">
+									<div className="flex flex-col w-full gap-2">
 										<button
 											onClick={() => {
 												navigator.clipboard.writeText(
@@ -337,7 +338,7 @@ export default function HomePage() {
 												);
 												toast.success("Copied!");
 											}}
-											className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#6C5CE7] text-white rounded-xl font-bold hover:bg-[#5b4cc4] transition shadow-md shadow-[#6C5CE7]/20"
+											className="flex items-center justify-center gap-2 w-full py-3 bg-[#6C5CE7] text-white rounded-xl font-bold hover:bg-[#5b4cc4] transition-all"
 										>
 											<Copy size={18} /> Copy Link
 										</button>
@@ -380,35 +381,47 @@ export default function HomePage() {
 
 			{/* for mobile view */}
 			{mobileMenuOpen && (
-				<div className="fixed inset-0 z-[60] flex">
+				<div className="fixed inset-0 z-[100] flex lg:hidden">
 					<div
-						className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+						className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300"
 						onClick={() => setMobileMenuOpen(false)}
 					/>
-					<div className="relative w-72 bg-white h-full p-6 shadow-2xl flex flex-col">
-						<div className="flex items-center justify-between mb-10">
+					<div className="relative w-72 bg-white h-full p-6 shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+						<div className="flex items-center justify-between mb-8">
 							<h1 className="text-2xl font-black text-[#6C5CE7]">LinkZip</h1>
-							<button onClick={() => setMobileMenuOpen(false)} className="p-2">
-								<X />
+							<button
+								onClick={() => setMobileMenuOpen(false)}
+								className="p-2 hover:bg-slate-100 rounded-full"
+							>
+								<X size={24} />
 							</button>
 						</div>
-						<nav className="space-y-4">
+						<nav className="space-y-3">
 							<Link href="/home" onClick={() => setMobileMenuOpen(false)}>
-								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
+								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7] text-white rounded-xl font-bold">
 									<Home size={20} /> Home
 								</div>
 							</Link>
 							<Link href="/links" onClick={() => setMobileMenuOpen(false)}>
-								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
-									<LinkIcon size={20} /> Link
+								<div className="flex items-center gap-4 p-3 text-slate-600 hover:bg-slate-50 rounded-xl font-bold transition-all">
+									<LinkIcon size={20} /> Links
 								</div>
 							</Link>
-							<Link href="/home" onClick={() => setMobileMenuOpen(false)}>
-								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
-									<QrCode size={20} /> QR Code
+							<Link href="/qr-codes" onClick={() => setMobileMenuOpen(false)}>
+								<div className="flex items-center gap-4 p-3 text-slate-600 hover:bg-slate-50 rounded-xl font-bold transition-all">
+									<QrCode size={20} /> QR Codes
 								</div>
 							</Link>
 						</nav>
+
+						<div className="mt-auto border-t pt-4">
+							<button
+								onClick={handleLogOut}
+								className="flex items-center gap-4 p-3 w-full text-red-600 font-bold"
+							>
+								<LogOut size={20} /> Logout
+							</button>
+						</div>
 					</div>
 				</div>
 			)}
