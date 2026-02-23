@@ -86,7 +86,7 @@ export default function QRPage() {
 		if (!confirm(`Are you sure want to delete this QR Code?`)) return;
 
 		try {
-			const res = await fetch(`${API_BASE_URL}/links/${shortCode}`, {
+			const res = await fetch(`${API_BASE_URL}/api/links/${shortCode}`, {
 				method: "DELETE",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -110,7 +110,7 @@ export default function QRPage() {
 
 		try {
 			const response = await fetch(
-				`${API_BASE_URL}/links/${selectedLink.short_code}`,
+				`${API_BASE_URL}/api/links/${selectedLink.short_code}`,
 				{
 					method: "PUT",
 					headers: {

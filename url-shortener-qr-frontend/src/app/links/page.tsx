@@ -50,7 +50,7 @@ export default function LinkPage() {
 			const token = localStorage.getItem("token");
 			if (!token) return router.push("/login");
 
-			const response = await fetch(`${API_BASE_URL}/links`, {
+			const response = await fetch(`${API_BASE_URL}/api/mylinks`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 
@@ -89,7 +89,7 @@ export default function LinkPage() {
 		if (!confirm(`Are you sure want to delete this link?`)) return;
 
 		try {
-			const res = await fetch(`${API_BASE_URL}/links/${shortCode}`, {
+			const res = await fetch(`${API_BASE_URL}/api/links/${shortCode}`, {
 				method: "DELETE",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -113,7 +113,7 @@ export default function LinkPage() {
 
 		try {
 			const response = await fetch(
-				`${API_BASE_URL}/links/${selectedLink.short_code}`,
+				`${API_BASE_URL}/api/links/${selectedLink.short_code}`,
 				{
 					method: "PUT",
 					headers: {

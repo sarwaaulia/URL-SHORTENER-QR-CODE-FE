@@ -60,7 +60,7 @@ export default function LinkDetailPage({
 
 				// fetch stats from API
 				const response = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/links/${link.short_code}/stats`,
+					`${process.env.NEXT_PUBLIC_API_URL}/api/links/${link.short_code}/stats`,
 					{
 						headers: { Authorization: `Bearer ${token}` },
 					},
