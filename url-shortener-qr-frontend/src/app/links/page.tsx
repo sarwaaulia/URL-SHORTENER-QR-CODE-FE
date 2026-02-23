@@ -50,7 +50,7 @@ export default function LinkPage() {
 			const token = localStorage.getItem("token");
 			if (!token) return router.push("/login");
 
-			const response = await fetch(`${API_BASE_URL}/api/mylinks`, {
+			const response = await fetch(`${API_BASE_URL}/api/links`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 
