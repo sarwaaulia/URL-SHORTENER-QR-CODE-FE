@@ -19,7 +19,6 @@ import {
 	LogOut,
 	Download,
 	ExternalLink,
-	Palette,
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -48,7 +47,7 @@ export default function LinkDetailPage({
 	// qr color edits
 	const [qrColor, setQrColor] = useState("#000000");
 
-	const domain = typeof window !== "undefined" ? window.location.origin : "";
+	const domain = "http://localhost:3000";
 
 	const fetchAllData = useCallback(async () => {
 		try {
@@ -292,7 +291,7 @@ export default function LinkDetailPage({
 				<div className="flex-1 overflow-y-auto p-4 lg:p-8">
 					<div className="max-w-5xl mx-auto">
 						<Link
-							href="/links"
+							href="/qr-codes"
 							className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 mb-6 group w-fit"
 						>
 							<ChevronLeft
@@ -328,7 +327,8 @@ export default function LinkDetailPage({
 										<div className="flex-1">
 											<div className="flex items-center gap-2">
 												<span className="text-indigo-600 font-bold text-lg">
-													LinkZip/{linkData.short_code}
+													<Link href={`${domain}/${linkData.short_code}`}>
+													{linkData.short_code}</Link>
 												</span>
 												<button
 													onClick={copyToClipboard}

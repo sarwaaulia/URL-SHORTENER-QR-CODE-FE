@@ -9,7 +9,7 @@ import {
 	QrCode,
 	Settings,
 	Trash2,
-    BarChart3,
+	BarChart3,
 	Copy,
 	LinkIcon,
 	ChevronRight,
@@ -22,6 +22,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { NavItem } from "@/app/components/Navitems";
+
+const domain = "http://localhost:3000";
 
 export default function LinkDetailPage({
 	params,
@@ -133,9 +135,7 @@ export default function LinkDetailPage({
 	if (!linkData) {
 		return (
 			<div className="flex items-center justify-center min-h-screen bg-slate-50">
-				<p className="animate-pulse font-medium text-slate-500">
-					Loading...
-				</p>
+				<p className="animate-pulse font-medium text-slate-500">Loading...</p>
 			</div>
 		);
 	}
@@ -268,7 +268,9 @@ export default function LinkDetailPage({
 								<div className="flex-1">
 									<div className="flex items-center gap-2 mt-1">
 										<p className="text-indigo-600 font-semibold text-lg">
-											LinkZip/{linkData.short_code}
+											<Link href={`${domain}/${linkData.short_code}`}>
+												{linkData.short_code}
+											</Link>
 										</p>
 										<button
 											onClick={copyToClipboard}
