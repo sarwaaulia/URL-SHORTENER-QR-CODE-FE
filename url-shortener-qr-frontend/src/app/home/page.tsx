@@ -34,7 +34,7 @@ interface UserData {
 	email: string;
 }
 
-const domain = "http://localhost:3000";
+const domain = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function HomePage() {
 	const [isLoadingAuth, setIsLoadingAuth] = useState(true);
@@ -75,7 +75,7 @@ export default function HomePage() {
 		const token = localStorage.getItem("token");
 
 		try {
-			const response = await fetch("http://localhost:3000/api/links", {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/links`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -396,6 +396,16 @@ export default function HomePage() {
 							<Link href="/home" onClick={() => setMobileMenuOpen(false)}>
 								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
 									<Home size={20} /> Home
+								</div>
+							</Link>
+							<Link href="/links" onClick={() => setMobileMenuOpen(false)}>
+								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
+									<LinkIcon size={20} /> Link
+								</div>
+							</Link>
+							<Link href="/home" onClick={() => setMobileMenuOpen(false)}>
+								<div className="flex items-center gap-4 p-3 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-xl font-bold">
+									<QrCode size={20} /> QR Code
 								</div>
 							</Link>
 						</nav>

@@ -47,7 +47,7 @@ export default function LinkDetailPage({
 	// qr color edits
 	const [qrColor, setQrColor] = useState("#000000");
 
-	const domain = "http://localhost:3000";
+	const domain = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 	const fetchAllData = useCallback(async () => {
 		try {

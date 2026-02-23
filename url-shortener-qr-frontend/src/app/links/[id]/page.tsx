@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { NavItem } from "@/app/components/Navitems";
 
-const domain = "http://localhost:3000";
+const domain = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function LinkDetailPage({
 	params,
